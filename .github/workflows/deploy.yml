@@ -16,7 +16,7 @@ jobs:
         run: |
           import os
           print(os.environ['PATH'])
-          with open('src\\data\\answers.js', 'w', encoding='utf-8') as answers, open('src\\data\\words.js', 'w', encoding='utf-8') as guesses, open('wordbank.txt', encoding='utf-8') as rawwords:
+          with open('src/data/answers.js', 'w', encoding='utf-8') as answers, open('src/data/words.js', 'w', encoding='utf-8') as guesses, open('wordbank.txt', encoding='utf-8') as rawwords:
             answers.write('const answers = [\n')
             guesses.write('const words = {\n')
             for word in rawwords:
@@ -29,7 +29,7 @@ jobs:
         shell: python
       - name: Create keyboard from plaintext layout
         run: |
-          with open('keyboard.txt', encoding='utf-8') as keyboard, open('src\\constants.js', 'w', encoding='utf-8') as constants:
+          with open('keyboard.txt', encoding='utf-8') as keyboard, open('src/constants.js', 'w', encoding='utf-8') as constants:
             keyboardRows = []
             for line in keyboard:
               print(line)
@@ -47,10 +47,12 @@ jobs:
         shell: python
       - name: Commit changes resulting from plaintext files
         run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -B pre-gh-pages
           git add .
           git commit -m "Automatically updating words.js, answers.js and constants.js"
-          git fetch origin main
-          git push origin HEAD:main
+          git push -u origin pre-gh-pages
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
@@ -63,6 +65,7 @@ jobs:
       - name: Build and save to gh-pages branch
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git checkout pre-gh-pages
           npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
