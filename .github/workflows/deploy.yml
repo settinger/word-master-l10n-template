@@ -14,10 +14,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Create the javascript word banks from plaintext word bank
         run: |
+          import os
+          print(os.environ['PATH'])
           with open('src\\data\\answers.js', 'w', encoding='utf-8') as answers, open('src\\data\\words.js', 'w', encoding='utf-8') as guesses, open('wordbank.txt', encoding='utf-8') as rawwords:
             answers.write('const answers = [\n')
             guesses.write('const words = {\n')
             for word in rawwords:
+              print(word)
               if len(word.strip())==5:
                 answers.write(f"  '{word.strip()}',\n")
                 guesses.write(f"  {word.strip()}: true,\n")
@@ -29,6 +32,7 @@ jobs:
           with open('keyboard.txt', encoding='utf-8') as keyboard, open('src\\constants.js', 'w', encoding='utf-8') as constants:
             keyboardRows = []
             for line in keyboard:
+              print(line)
               if len(line.strip())>0:
                 keyboardRows += [line.strip()]
             letters = sorted([letter for row in keyboardRows for letter in row])
