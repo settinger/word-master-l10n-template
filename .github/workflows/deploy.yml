@@ -75,6 +75,8 @@ jobs:
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git checkout pre-gh-pages
           npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+          git checkout main
+          git branch -d pre-gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # React insists on treating warnings as errors if it thinks it is running on CI.
