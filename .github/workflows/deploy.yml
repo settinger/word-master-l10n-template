@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check out code 
         uses: actions/checkout@v2
-      - name: Edit the deploy URL in package.json TODO: put this in a .py file
+      - name: Edit the deploy URL in package.json (TODO put this in a .py file)
         run: |
           import re
           with open('package.json', 'r', encoding='utf-8') as package:
@@ -21,7 +21,7 @@ jobs:
           repo = re.sub(f'^{owner}/', '', "${GITHUB_REPOSITORY}".lower())
           contents = re.sub('.*"homepage": .*', f'  "homepage": "https://{owner}.github.io/{repo}/",', contents)
         shell: python
-      - name: Create the javascript word banks from plaintext word bank TODO: put this in a .py file
+      - name: Create the javascript word banks from plaintext word bank (TODO put this in a .py file)
         run: |
           with open('src/data/answers.js', 'w', encoding='utf-8') as answers, open('src/data/words.js', 'w', encoding='utf-8') as guesses, open('wordbank.txt', encoding='utf-8') as rawwords:
             answers.write('const answers = [\n')
@@ -34,7 +34,7 @@ jobs:
             answers.write("];\n\nexport default answers\n")
             guesses.write("};\n\nexport default words\n")
         shell: python
-      - name: Create keyboard from plaintext layout TODO: put this in a .py file
+      - name: Create keyboard from plaintext layout (TODO put this in a .py file)
         run: |
           with open('keyboard.txt', encoding='utf-8') as keyboard, open('src/constants.js', 'w', encoding='utf-8') as constants:
             keyboardRows = []
