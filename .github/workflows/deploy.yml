@@ -15,10 +15,11 @@ jobs:
       - name: Edit the deploy URL in package.json (TODO put this in a .py file)
         run: |
           import re
+          import os
           with open('package.json', 'r', encoding='utf-8') as package:
             contents = package.read();
-          owner = "${GITHUB_REPOSITORY_OWNER}".lower()
-          repo = re.sub(f'^{owner}/', '', "${GITHUB_REPOSITORY}".lower())
+          owner = os.environ("GITHUB_REPOSITORY_OWNER").lower()
+          repo = re.sub(f'^{owner}/', '', os.environ("GITHUB_REPOSITORY").lower())
           contents = re.sub('.*"homepage": .*', f'  "homepage": "https://{owner}.github.io/{repo}/",', contents)
         shell: python
       - name: Create the javascript word banks from plaintext word bank (TODO put this in a .py file)
