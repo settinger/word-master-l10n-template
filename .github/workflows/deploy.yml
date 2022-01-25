@@ -68,13 +68,14 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm run test
-      - name: Build and save to gh-pages branch
+      - name: Build and save to gh-pages branch, remove pre-gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git checkout pre-gh-pages
           npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
           git checkout main
           git branch -d pre-gh-pages
+          git push origin --delete pre-gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # React insists on treating warnings as errors if it thinks it is running on CI.
