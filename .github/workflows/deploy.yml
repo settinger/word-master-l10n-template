@@ -21,6 +21,8 @@ jobs:
           owner = os.environ["GITHUB_REPOSITORY_OWNER"].lower()
           repo = re.sub(f'^{owner}/', '', os.environ["GITHUB_REPOSITORY"].lower())
           contents = re.sub('.*"homepage": .*', f'  "homepage": "https://{owner}.github.io/{repo}/",', contents)
+          with open('package.json', 'w', encoding='utf-8') as package:
+            package.write(contents);
         shell: python
       - name: Create the javascript word banks from plaintext word bank (TODO put this in a .py file)
         run: |
@@ -57,7 +59,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git checkout -B pre-gh-pages
           git add .
-          git commit -m "Automatically updating words.js, answers.js and constants.js"
+          git commit -m "Automatically updating package.json, words.js, answers.js and constants.js"
           git push -u origin pre-gh-pages
       - name: Set up Node
         uses: actions/setup-node@v2
