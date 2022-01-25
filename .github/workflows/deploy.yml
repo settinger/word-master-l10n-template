@@ -28,7 +28,6 @@ jobs:
             answers.write('const answers = [\n')
             guesses.write('const words = {\n')
             for word in rawwords:
-              print(word)
               if len(word.strip())==5:
                 answers.write(f"  '{word.strip()}',\n")
                 guesses.write(f"  {word.strip()}: true,\n")
@@ -40,7 +39,6 @@ jobs:
           with open('keyboard.txt', encoding='utf-8') as keyboard, open('src/constants.js', 'w', encoding='utf-8') as constants:
             keyboardRows = []
             for line in keyboard:
-              print(line)
               if len(line.strip())>0:
                 keyboardRows += [line.strip()]
             letters = sorted([letter for row in keyboardRows for letter in row])
