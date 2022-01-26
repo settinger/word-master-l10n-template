@@ -53,8 +53,10 @@ jobs:
               constants.write(f"  '{letter.upper()}',\n")
             constants.write("];\n\nexport const status = {\n  green: 'green',\n  yellow: 'yellow',\n  gray: 'gray',\n  unguessed: 'unguessed',\n};\n")
         shell: python
-      - name: Commit changes resulting from plaintext files
+      - name: Delete pre-gh-pages if it already exists, commit changes resulting from plaintext files
         run: |
+          git branch -D pre-gh-pages &>/dev/null
+          git push origin --delete pre-gh-pages &>/dev/null
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout -B pre-gh-pages
