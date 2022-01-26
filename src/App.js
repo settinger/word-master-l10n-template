@@ -78,7 +78,16 @@ function App() {
   const [infoModalIsOpen, setInfoModalIsOpen] = useState(firstTime)
   const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false)
   const [difficultyLevel, setDifficultyLevel] = useLocalStorage('difficulty', difficulty.normal)
-  const [exactGuesses, setExactGuesses] = useState({})
+  const getDifficultyLevelInstructions = () => {
+    if (difficultyLevel === difficulty.easy) {
+      return 'Guess any 5 letters'
+    } else if (difficultyLevel === difficulty.hard) {
+      return 'Guess any valid word using all the hints you\'ve been given'
+    } else {
+      return 'Guess any valid word'
+    }
+  }
+  const [exactGuesses, setExactGuesses] = useLocalStorage('exact-guesses', {})
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
@@ -144,8 +153,13 @@ function App() {
     const guessedLetters = Object.entries(letterStatuses).filter(([letter, letterStatus]) =>
       [status.yellow, status.green].includes(letterStatus)
     )
-    if (!guessedLetters.every(([letter, _]) => word.includes(letter))) return [false, `In hard mode, you must use all the hints you've been given.`]
-    return [Object.entries(exactGuesses).every(([position, letter]) => word[position] === letter)]
+    const yellowsUsed = guessedLetters.every(([letter, _]) => word.includes(letter))
+    const greensUsed = Object.entries(exactGuesses).every(
+      ([position, letter]) => word[position] === letter
+    )
+    if (!yellowsUsed || !greensUsed)
+      return [false, `In hard mode, you must use all the hints you've been given.`]
+    return [true]
   }
 
   const onEnterPress = () => {
@@ -153,7 +167,7 @@ function App() {
     const [valid, err] = isValidWord(word)
     if (!valid) {
       setSubmittedInvalidWord(true)
-      alert(err)
+      // alert(err)
       return
     }
 
@@ -210,7 +224,7 @@ function App() {
 
       return newCellStatuses
     })
-    setExactGuesses(fixedLetters)
+    setExactGuesses(prev => ({...prev, ...fixedLetters}))
   }
 
   const isRowAllGreen = (row) => {
@@ -394,6 +408,7 @@ function App() {
           toggleDarkMode={toggleDarkMode}
           difficultyLevel={difficultyLevel}
           setDifficultyLevel={setDifficultyLevel}
+          levelInstructions={getDifficultyLevelInstructions()}
         />
         <div className={`h-auto relative ${gameState === state.playing ? '' : 'invisible'}`}>
           <Keyboard
